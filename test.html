@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RideReady - Car Booking Service</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2c3e50;
+      --accent-color: #e74c3c;
+      --light-color: #ecf0f1;
+      --dark-color: #34495e;
+      --success-color: #2ecc71;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+    }
+    
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    
+    .logo span {
+      color: var(--accent-color);
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+    
+    nav ul li {
+      margin-left: 1.5rem;
+    }
+    
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    nav ul li a:hover {
+      color: var(--light-color);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .hero {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/api/placeholder/1200/500');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 4rem 2rem;
+      margin-bottom: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .booking-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .booking-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    
+    button.btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    button.btn:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+    
+    button.btn:active {
+      transform: translateY(0);
+    }
+    
+    .cars-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .car-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .car-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .car-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .car-details {
+      padding: 1.5rem;
+    }
+    
+    .car-name {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    
+    .car-type {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .car-features {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+    
+    .feature {
+      display: flex;
+      align-items: center;
+      margin-right: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .car-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--secondary-color);
+    }
+    
+    .car-price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #777;
+    }
+    
+    .car-action {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .car-action button {
+      flex: 1;
+      margin-right: 0.5rem;
+    }
+    
+    .car-action button:last-child {
+      margin-right: 0;
+      background-color: var(--accent-color);
+    }
+    
+    .car-action button:last-child:hover {
+      background-color: #c0392b;
+    }
+    
+    .section-heading {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .section-heading h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .section-heading p {
+      color: #777;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      overflow: auto;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 2rem;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: var(--dark-color);
+    }
+    
+    .modal-title {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 1rem;
+    }
+    
+    .confirmation-message {
+      text-align: center;
+      padding: 2rem;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .confirmation-message h3 {
+      color: var(--success-color);
+      margin-bottom: 1rem;
+    }
+    
+    footer {
+      background-color: var(--secondary-color);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+    
+    .footer-links a {
+      color: var(--light-color);
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+    
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Dashboard styles */
+    .dashboard-section {
+      margin-top: 2rem;
+    }
+    
+    .dashboard-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .booking-list {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .booking-item {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .booking-item:last-child {
+      border-bottom: none;
+    }
+    
+    .booking-item .booking-id {
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    
+    .booking-item .booking-status {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .status-confirmed {
+      background-color: #e3f2fd;
+      color: #1565c0;
+    }
+    
+    .status-completed {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .status-cancelled {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    
+    .login-container {
+      max-width: 500px;
+      margin: 3rem auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 2rem;
+    }
+    
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 1rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      font-weight: 600;
+    }
+    
+    .tab.active {
+      border-bottom: 2px solid var(--primary-color);
+      color: var(--primary-color);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      nav ul li {
+        margin-left: 1rem;
+      }
+      
+      .modal-content {
+        width: 95%;
+      }
+      
+      .booking-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Ride<span>Ready</span></div>
+    <nav>
+      <ul>
+        <li><a href="#" class="active home-link">Home</a></li>
+        <li><a href="#" class="cars-link">Cars</a></li>
+        <li><a href="#" class="dashboard-link">My Bookings</a></li>
+        <li><a href="#" class="login-link">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <div class="container" id="mainContent">
+    <!-- Home page content will be loaded here by default -->
+  </div>
+  
+  <!-- Templates for different pages -->
+  <template id="homePage">
+    <section class="hero">
+      <h1>Your Journey Starts Here</h1>
+      <p>Book your dream ride in minutes. We offer the best cars at competitive prices with no hidden fees.</p>
+      <button class="btn" id="exploreButton">Explore Cars</button>
+    </section>
+    
+    <section class="booking-container">
+      <div class="section-heading">
+        <h2>Find Your Perfect Car</h2>
+        <p>Search our extensive fleet and book in three simple steps</p>
+      </div>
+      
+      <form class="booking-form" id="searchForm">
+        <div class="form-group">
+          <label for="pickup-location">Pickup Location</label>
+          <input type="text" id="pickup-location" placeholder="Enter city or airport" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="pickup-date">Pickup Date</label>
+          <input type="datetime-local" id="pickup-date" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="return-date">Return Date</label>
+          <input type="datetime-local" id="return-date" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="car-type">Car Type</label>
+          <select id="car-type">
+            <option value="">All Types</option>
+            <option value="economy">Economy</option>
+            <option value="compact">Compact</option>
+            <option value="suv">SUV</option>
+            <option value="luxury">Luxury</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button type="submit" class="btn" id="searchButton">Search Cars</button>
+        </div>
+      </form>
+    </section>
+    
+    <section>
+      <div class="section-heading">
+        <h2>Available Cars</h2>
+        <p>Browse our selection of top-rated vehicles</p>
+      </div>
+      
+      <div class="cars-container" id="carsContainer">
+        <!-- Cars will be dynamically added here -->
+      </div>
+    </section>
+  </template>
+  
+  <template id="dashboardPage">
+    <section class="dashboard-section">
+      <div class="dashboard-heading">
+        <h2>My Bookings</h2>
+        <button class="btn" id="refreshBookings">Refresh</button>
+      </div>
+      
+      <div id="bookingsContainer">
+        <div class="loading-spinner" id="bookingsLoader">
+          <div class="spinner"></div>
+        </div>
+        
+        <div class="booking-list" id="bookingsList" style="display: none;">
+          <!-- Bookings will be dynamically added here -->
+        </div>
+        
+        <div id="noBookings" style="display: none;">
+          <p>You don't have any bookings yet.</p>
+          <button class="btn" id="exploreCarsBtnDashboard">Explore Cars</button>
+        </div>
+      </div>
+    </section>
+  </template>
+  
+  <template id="loginPage">
+    <div class="login-container">
+      <div class="tabs">
+        <div class="tab active" data-tab="login">Login</div>
+        <div class="tab" data-tab="register">Register</div>
+      </div>
+      
+      <div class="tab-content active" id="loginTab">
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" placeholder="Enter your email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Enter your password" required>
+          </div>
+          
+          <button type="submit" class="btn">Login</button>
+        </form>
+      </div>
+      
+      <div class="tab-content" id="registerTab">
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="register-name">Full Name</label>
+            <input type="text" id="register-name" placeholder="Enter your full name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="register-email">Email Address</label>
+            <input type="email" id="register-email" placeholder="Enter your email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="register-phone">Phone Number</label>
+            <input type="tel" id="register-phone" placeholder="Enter your phone number" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" placeholder="Enter a strong password" required>
+          </div>
+          
+          <button type="submit" class="btn">Register</button>
+        </form>
+      </div>
+    </div>
+  </template>
+  
+  <div id="bookingModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 class="modal-title">Complete Your Booking</h2>
+      
+      <div id="selectedCarDetails" class="car-details" style="padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #eee;">
+        <!-- Selected car details will be displayed here -->
+      </div>
+      
+      <form id="bookingForm">
+        <div class="form-group">
+          <label for="bookingid">Booking ID</label>
+          <input type="text" id="bookingid" placeholder="Booking ID will be auto-generated" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="carname">Car Name</label>
+          <input type="text" id="carname" placeholder="Car name will be auto-filled" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="location">Pickup Location</label>
+          <input type="text" id="location" placeholder="Location will be auto-filled" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" placeholder="Enter your full name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email address" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="Enter your phone number" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="driver-license">Driver's License Number</label>
+          <input type="text" id="driver-license" placeholder="Enter your driver's license number" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="payment-method">Payment Method</label>
+          <select id="payment-method" required>
+            <option value="">Select payment method</option>
+            <option value="credit-card">Credit Card</option>
+            <option value="paypal">PayPal</option>
+            <option value="bank-transfer">Bank Transfer</option>
+          </select>
+        </div>
+        
+        <button type="button" class="btn" id="confirmBookingBtn">Confirm Booking</button>
+      </form>
+      
+      <div id="confirmationMessage" class="confirmation-message" style="display: none;">
+        <h3>Booking Confirmed!</h3>
+        <p>Thank you for your booking. A confirmation has been sent to your email.</p>
+        <p>Your booking reference: <strong id="bookingReference">XYZ123</strong></p>
+        <button type="button" class="btn" id="closeModalBtn">Close</button>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="logo">Ride<span>Ready</span></div>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">FAQ</a>
+      <a href="#">Support</a>
+    </div>
+    <p>&copy; 2025 RideReady. All rights reserved.</p>
+  </footer>
+  
+  <script>
+    // API URL - change this to match your backend
+    const API_BASE_URL = 'http://localhost:5000/api';
+    
+    // Auth token storage
+    let authToken = localStorage.getItem('authToken');
+    let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    let selectedCar = null;
+    let searchParams = {};
+    
+    // DOM Elements
+    const mainContent = document.getElementById('mainContent');
+    const homeTemplate = document.getElementById('homePage');
+    const dashboardTemplate = document.getElementById('dashboardPage');
+    const loginTemplate = document.getElementById('loginPage');
+    
+    // Navigation links
+    const homeLink = document.querySelector('.home-link');
+    const carsLink = document.querySelector('.cars-link');
+    const dashboardLink = document.querySelector('.dashboard-link');
+    const loginLink = document.querySelector('.login-link');
+    
+    // Modal elements
+    const modal = document.getElementById('bookingModal');
+    const closeBtn = document.querySelector('.close');
+    const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+    const confirmationMessage = document.getElementById('confirmationMessage');
+    const bookingForm = document.getElementById('bookingForm');
+    const bookingReference = document.getElementById('bookingReference');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const selectedCarDetails = document.getElementById('selectedCarDetails');
+    
+    // Sample car data (will be replaced with API data)
+    const cars = [
+      {
+        id: 1,
+        name: "Toyota Corolla",
+        type: "Economy",
+        image: "corolla.jpeg",
+        seats: 5,
+        luggage: 2,
+        transmission: "Automatic",
+        price: 45,
+        available: true
+      },
+      {
+        id: 2,
+        name: "Honda Civic",
+        type: "Compact",
+        image: "civic.jpeg",
+        seats: 5,
+        luggage: 2,
+        transmission: "Automatic",
+        price: 48,
+        available: true
+      },
+      {
+        id: 3,
+        name: "Ford Explorer",
+        type: "SUV",
+        image: "explorer.jpeg",
+        seats: 7,
+        luggage: 4,
+        transmission: "Automatic",
+        price: 85,
+        available: true
+      },
+      {
+        id: 4,
+        name: "Mercedes C-Class",
+        type: "Luxury",
+        image: "c_class.jpeg",
+        seats: 5,
+        luggage: 3,
+        transmission: "Automatic",
+        price: 120,
+        available: true
+      },
+      {
+        id: 5,
+        name: "Hyundai Elantra",
+        type: "Economy",
+        image: 'hundai.jpeg',
+        seats: 5,
+        luggage: 2,
+        transmission: "Automatic",
+        price: 42,
+        available: true
+      },
+      {
+        id: 6,
+        name: "BMW 5 Series",
+        type: "Luxury",
+        image: "5_series.jpeg",
+        seats: 5,
+        luggage: 3,
+        transmission: "Automatic",
+        price: 135,
+        available: true
+      }
+    ];
+    
+    // Page Navigation
+    function navigateTo(page) {
+      mainContent.innerHTML = '';
+      
+      switch(page) {
+        case 'home':
+          mainContent.appendChild(homeTemplate.content.cloneNode(true));
+          initHomePage();
+          break;
+        case 'dashboard':
+          if (isLoggedIn()) {
+            mainContent.appendChild(dashboardTemplate.content.cloneNode(true));
+            initDashboard();
+          } else {
+            navigateTo('login');
+            showAlert('Please login to view your bookings');
+          }
+          break;
+        case 'login':
+          mainContent.appendChild(loginTemplate.content.cloneNode(true));
+          initLoginPage();
+          break;
+        default:
+          navigateTo('home');
+      }
+      
+      updateNavigation();
+    }
+    
+    // Check if user is logged in
+    function isLoggedIn() {
+      return authToken !== null && currentUser !== null;
+    }
+    
+    // Update navigation based on login state
+    function updateNavigation() {
+      if (isLoggedIn()) {
+        loginLink.textContent = 'Logout';
+        dashboardLink.style.display = 'block';
+      } else {
+        loginLink.textContent = 'Login';
+        dashboardLink.style.display = 'none';
+      }
+    }
+    
+    // Initialize Home Page
+    function initHomePage() {
+      const searchForm = document.getElementById('searchForm');
+      const searchButton = document.getElementById('searchButton');
+      const carsContainer = document.getElementById('carsContainer');
+      const exploreButton = document.getElementById('exploreButton');
+      
+      // Initialize date inputs with min values
+      initDateInputs();
+      
+      // Event listeners
+      searchForm.addEventListener('submit', handleSearch);
+      exploreButton.addEventListener('click', () => {
+        // Scroll to cars section
+        document.querySelector('.booking-container').scrollIntoView({ behavior: 'smooth' });
+      });
+      
+      // Display all cars initially
+      displayCars(cars);
+    }
+    
+    // Initialize date inputs with min values
+    function initDateInputs() {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      const formatDateTime = (date) => {
+        return date.toISOString().slice(0, 16);
+      };
+      
+      const pickupDateInput = document.getElementById('pickup-date');
+      const returnDateInput = document.getElementById('return-date');
+      
+      if (pickupDateInput && returnDateInput) {
+        pickupDateInput.min = formatDateTime(today);
+        pickupDateInput.value = formatDateTime(today);
+        returnDateInput.min = formatDateTime(tomorrow);
+        returnDateInput.value = formatDateTime(tomorrow);
+        
+        // Update return date min value when pickup date changes
+        pickupDateInput.addEventListener('change', function() {
+          const pickupDate = new Date(this.value);
+          const nextDay = new Date(pickupDate);
+          nextDay.setDate(nextDay.getDate() + 1);
+          
+          returnDateInput.min = formatDateTime(nextDay);
+          
+          // If current return date is before new pickup date + 1
+          const returnDate = new Date(returnDateInput.value);
+          
+          if (returnDate <= pickupDate) {
+            returnDateInput.value = formatDateTime(nextDay);
+          }
+        });
+      }
+    }
+    
+    // Handle search form submission
+    function handleSearch(e) {
+      e.preventDefault();
+      
+      const pickupLocation = document.getElementById('pickup-location').value;
+      const pickupDate = document.getElementById('pickup-date').value;
+      const returnDate = document.getElementById('return-date').value;
+      const carType = document.getElementById('car-type').value.toLowerCase();
+      
+      // Save search parameters
+      searchParams = {
+        pickupLocation,
+        pickupDate,
+        returnDate,
+        carType
+      };
+      
+      // In a real app, this would be an API call
+      // For this demo, we'll just filter the local data
+      fetchAvailableCars(pickupDate, returnDate, carType);
+    }
+    
+    // Fetch available cars from API (simulated)
+    function fetchAvailableCars(pickupDate, returnDate, carType) {
+      // In a real app, this would be an API call
+      // For demo, we'll filter the local data
+      let filteredCars = [...cars];
+      
+      // Filter by car type if selected
+      if (carType) {
+        filteredCars = filteredCars.filter(car => car.type.toLowerCase().includes(carType));
+      }
+      
+      displayCars(filteredCars);
+    }
+    
+    function displayCars(carsToDisplay) {
+      const carsContainer = document.getElementById('carsContainer');
+      
+      if (!carsContainer) {
+        return;
+      }
+      
+      carsContainer.innerHTML = '';
+      
+      if (carsToDisplay.length === 0) {
+        carsContainer.innerHTML = '<p class="no-results">No cars available for the selected criteria. Please try different search parameters.</p>';
+        return;
+      }
+      
+      carsToDisplay.forEach(car => {
+        const carCard = document.createElement('div');
+        carCard.className = 'car-card';
+        
+        carCard.innerHTML = `
+          <img src="${car.image}" alt="${car.name}" class="car-img">
+          <div class="car-details">
+            <h3 class="car-name">${car.name}</h3>
+            <p class="car-type">${car.type}</p>
+            <div class="car-features">
+              <span class="feature">${car.seats} Seats</span>
+              <span class="feature">${car.luggage} Luggage</span>
+              <span class="feature">${car.transmission}</span>
+            </div>
+            <p class="car-price">$${car.price}<span>/day</span></p>
+            <div class="car-action">
+              <button class="btn book-btn" data-car-id="${car.id}">Book Now</button>
+              <button class="btn">View Details</button>
+            </div>
+          </div>
+        `;
+        
+        carsContainer.appendChild(carCard);
+        
+        // Add event listener to book button
+        const bookBtn = carCard.querySelector('.book-btn');
+        bookBtn.addEventListener('click', () => openBookingModal(car));
+      });
+    }
+    
+    // Open the booking modal
+    function openBookingModal(car) {
+      selectedCar = car;
+      
+      // Display car details in modal
+      selectedCarDetails.innerHTML = `
+        <h3>${car.name} - ${car.type}</h3>
+        <p class="car-price">$${car.price}<span>/day</span></p>
+        <div class="car-features">
+          <span class="feature">${car.seats} Seats</span>
+          <span class="feature">${car.luggage} Luggage</span>
+          <span class="feature">${car.transmission}</span>
+        </div>
+      `;
+      
+      // If user is logged in, prefill the form
+      if (isLoggedIn() && currentUser) {
+        document.getElementById('fullname').value = currentUser.name || '';
+        document.getElementById('email').value = currentUser.email || '';
+        document.getElementById('phone').value = currentUser.phone || '';
+      }
+      
+      // Show booking form, hide confirmation
+      bookingForm.style.display = 'block';
+      confirmationMessage.style.display = 'none';
+      
+      // Show modal
+      modal.style.display = 'block';
+    }
+    
+    // Close the modal
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+    
+// Replace the MySQL code at the end of your script with this:
+
+// Confirm booking
+function confirmBooking() {
+  if (!selectedCar) {
+    return;
+  }
+
+  // Collect form data
+  const bookingData = {
+    carId: selectedCar.id,
+    carName: selectedCar.name,
+    pickupLocation: searchParams.pickupLocation || 'Default Location',
+    pickupDate: searchParams.pickupDate || new Date().toISOString(),
+    returnDate: searchParams.returnDate || new Date().toISOString(),
+    customerName: document.getElementById('fullname').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    driverLicense: document.getElementById('driver-license').value,
+    paymentMethod: document.getElementById('payment-method').value
+  };
+
+  // API call to save booking
+  fetch(`${API_BASE_URL}/bookings`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(bookingData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Booking submitted successfully:', data);
+    
+    // Set the booking reference in the confirmation message
+    bookingReference.textContent = data.bookingId;
+    
+    // Hide booking form, show confirmation
+    bookingForm.style.display = 'none';
+    confirmationMessage.style.display = 'block';
+  })
+  .catch(error => {
+    console.error('Error submitting booking:', error);
+    showAlert('Failed to save booking. Please try again.');
+  });
+}    
+   
+    
+    // Initialize Dashboard
+    function initDashboard() {
+      const bookingsList = document.getElementById('bookingsList');
+      const noBookings = document.getElementById('noBookings');
+      const bookingsLoader = document.getElementById('bookingsLoader');
+      const refreshBtn = document.getElementById('refreshBookings');
+      const exploreCarsBtn = document.getElementById('exploreCarsBtnDashboard');
+      
+      // In a real app, this would fetch from API
+      function fetchBookings() {
+        bookingsLoader.style.display = 'block';
+        bookingsList.style.display = 'none';
+        noBookings.style.display = 'none';
+        
+        // Simulate API call
+        setTimeout(() => {
+          bookingsLoader.style.display = 'none';
+          
+          // Demo data - in a real app, this would come from the API
+          const userBookings = [
+            {
+              id: 'B12345',
+              carName: 'Ford Explorer',
+              pickupDate: '2025-03-01T10:00',
+              returnDate: '2025-03-05T10:00',
+              pickupLocation: 'Seattle Airport',
+              totalPrice: 340,
+              status: 'confirmed'
+            },
+            {
+              id: 'B12346',
+              carName: 'Toyota Corolla',
+              pickupDate: '2025-01-15T09:00',
+              returnDate: '2025-01-17T17:00',
+              pickupLocation: 'Downtown Seattle',
+              totalPrice: 90,
+              status: 'completed'
+            }
+          ];
+          
+          if (userBookings.length > 0) {
+            bookingsList.innerHTML = '';
+            
+            userBookings.forEach(booking => {
+              const pickupDate = new Date(booking.pickupDate);
+              const returnDate = new Date(booking.returnDate);
+              
+              const bookingItem = document.createElement('div');
+              bookingItem.className = 'booking-item';
+              bookingItem.innerHTML = `
+                <div>
+                  <p class="booking-id">${booking.id}</p>
+                  <p>${booking.carName}</p>
+                </div>
+                <div>
+                  <p><strong>Pickup:</strong> ${formatDate(pickupDate)}</p>
+                  <p><strong>Return:</strong> ${formatDate(returnDate)}</p>
+                </div>
+                <div>
+                  <p><strong>Location:</strong> ${booking.pickupLocation}</p>
+                  <p><strong>Total:</strong> $${booking.totalPrice}</p>
+                </div>
+                <div>
+                  <span class="booking-status status-${booking.status}">${booking.status}</span>
+                </div>
+              `;
+              
+              bookingsList.appendChild(bookingItem);
+            });
+            
+            bookingsList.style.display = 'block';
+          } else {
+            noBookings.style.display = 'block';
+          }
+        }, 1000);
+      }
+      
+      // Format date for display
+      function formatDate(date) {
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+      
+      // Fetch bookings on page load
+      fetchBookings();
+      
+      // Event listeners
+      refreshBtn.addEventListener('click', fetchBookings);
+      exploreCarsBtn.addEventListener('click', () => navigateTo('home'));
+    }
+    
+    // Initialize Login Page
+    function initLoginPage() {
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      
+      // Switch between tabs
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // Update active tab
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Show selected tab content
+          tabContents.forEach(content => {
+            content.classList.remove('active');
+            if (content.id === tabId + 'Tab') {
+              content.classList.add('active');
+            }
+          });
+        });
+      });
+      
+      // Handle login form submission
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        // In a real app, this would be an API call
+        // For demo, we'll simulate successful login
+        authToken = 'demo-token';
+        currentUser = {
+          name: 'John Smith',
+          email: email,
+          phone: '555-123-4567'
+        };
+        
+        // Store in localStorage
+        localStorage.setItem('authToken', authToken);
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        // Update UI
+        updateNavigation();
+        navigateTo('home');
+        showAlert('Login successful!');
+      });
+      
+      // Handle register form submission
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const phone = document.getElementById('register-phone').value;
+        const password = document.getElementById('register-password').value;
+        
+        // In a real app, this would be an API call
+        // For demo, we'll simulate successful registration
+        authToken = 'demo-token';
+        currentUser = {
+          name: name,
+          email: email,
+          phone: phone
+        };
+        
+        // Store in localStorage
+        localStorage.setItem('authToken', authToken);
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        // Update UI
+        updateNavigation();
+        navigateTo('home');
+        showAlert('Registration successful!');
+      });
+    }
+    
+    // Show alert message
+    function showAlert(message) {
+      const alertBox = document.createElement('div');
+      alertBox.className = 'alert';
+      alertBox.textContent = message;
+      alertBox.style.position = 'fixed';
+      alertBox.style.top = '20px';
+      alertBox.style.left = '50%';
+      alertBox.style.transform = 'translateX(-50%)';
+      alertBox.style.backgroundColor = 'var(--primary-color)';
+      alertBox.style.color = 'white';
+      alertBox.style.padding = '1rem 2rem';
+      alertBox.style.borderRadius = '5px';
+      alertBox.style.zIndex = '9999';
+      alertBox.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.2)';
+      
+      document.body.appendChild(alertBox);
+      
+      setTimeout(() => {
+        alertBox.style.opacity = '0';
+        alertBox.style.transition = 'opacity 0.5s ease';
+        
+        setTimeout(() => {
+          document.body.removeChild(alertBox);
+        }, 500);
+      }, 3000);
+    }
+    
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Navigation event listeners
+      homeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigateTo('home');
+      });
+      
+      carsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigateTo('home');
+        
+        // Scroll to cars section after page loads
+        setTimeout(() => {
+          const carsSection = document.querySelector('.cars-container');
+          if (carsSection) {
+            carsSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      });
+      
+      dashboardLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigateTo('dashboard');
+      });
+      
+      loginLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isLoggedIn()) {
+          // Logout
+          authToken = null;
+          currentUser = null;
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('currentUser');
+          updateNavigation();
+          navigateTo('home');
+          showAlert('You have been logged out');
+        } else {
+          navigateTo('login');
+        }
+      });
+      
+      // Modal event listeners
+      closeBtn.addEventListener('click', closeModal);
+      confirmBookingBtn.addEventListener('click', confirmBooking);
+      closeModalBtn.addEventListener('click', closeModal);
+      
+      // Close modal when clicking outside
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+      
+      // Load home page by default
+      navigateTo('home');
+    });
+    const mysql = require('mysql');
+
+// Create the MySQL connection
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'bhoomikm12',
+  database: 'carbooking'
+});
+
+// Connect to the database
+connection.connect(err => {
+  if (err) {
+    console.error('Error connecting to the database:', err);
+  } else {
+    console.log('Connected to MySQL database.');
+  }
+});
+
+// Helper function to generate a random booking ID
+function generateBookingId() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
+// When the "Book Now" button is clicked inside the booking modal,
+// store the booking data in the database.
+document.getElementById('confirmBookingBtn').addEventListener('click', () => {
+  // Generate a booking ID and fill it into the readonly input (if needed)
+  const bookingId = generateBookingId();
+  document.getElementById('bookingid').value = bookingId;
+
+  // Retrieve the form data
+  const customerName = document.getElementById('fullname').value;
+  const carName = document.getElementById('carname').value;
+  const location = document.getElementById('location').value;
+
+  // SQL INSERT query (make sure your table "customer" has columns:
+  // Booking_ID, Customer_name, Car_name, Location)
+  const sql = `INSERT INTO customer (Booking_ID, Customer_name, Car_name, Location)
+               VALUES (?, ?, ?, ?)`;
+  const data = [bookingId, customerName, carName, location];
+
+  // Execute the query
+  connection.query(sql, data, (err, result) => {
+    if (err) {
+      console.error('Error inserting booking:', err);
+      alert('Failed to save booking.');
+    } else {
+      console.log('Booking inserted successfully:', result);
+      alert('Booking saved successfully!');
+    }
+  });
+});
+
+// Optionally, close the connection when the window is unloaded
+window.addEventListener('beforeunload', () => {
+  connection.end();
+});
+  </script>
+</body>
+</html>
